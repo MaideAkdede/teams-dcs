@@ -7,28 +7,34 @@ define('MISSING_FILE', 'Le fichier texte est absent');
 define('NO_TEAM_YET', 'Pas encore d‘équipe');
 define('FILE_PATH', 'teams.txt');
 
-if(!is_file(FILE_PATH)){
+if (!is_file(FILE_PATH)) {
     $errors[] = MISSING_FILE;
 } else {
     $teams = @file(FILE_PATH, FILE_IGNORE_NEW_LINES);
 
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        if($_POST['action'] === 'add'){
-            $teamName = trim($_POST['team-name']);
-            if($teamName){
-                $teams[] = $teamName;
+        if ($_POST['action'] === 'add') {
+            $tn = $_POST['team-name'] ?? '';
+            if (is_string($tn)) {
+                $teamName = trim($tn);
+                if ($teamName) {
+                    $teams[] = $teamName;
+                }
             }
         }
 
-        if($_POST['action'] === 'delete'){
-            $teamsNames = $_POST['team-name'] ?? [];
-            $teams = array_diff($teams, $teamsNames);
+        if ($_POST['action'] === 'delete') {
+            $tns =  $_POST['team-name'] ?? [];
+            if(is_array($tns)){
+                $teams = array_diff($teams, $tns);
+            }
         }
 
-        file_put_contents(FILE_PATH, array_map(fn($team) => $team.PHP_EOL, $teams));
+        file_put_contents(FILE_PATH, array_map(fn($team) => $team . PHP_EOL, $teams));
     }
 }
+$teams = array_map(fn($team)=>filter_var($team, FILTER_SANITIZE_FULL_SPECIAL_CHARS), $teams);
 
 ?>
 <!-- TEMPLATE D'AFFICHAGE -->
