@@ -19,10 +19,8 @@ if(!is_file(FILE_PATH)){
                 $teams[] = $teamName;
             }
         }
-        foreach ($teams as $k => $team){
-            $teams[$k] = $team.PHP_EOL;
-        }
-        file_put_contents(FILE_PATH, $teams);
+
+        file_put_contents(FILE_PATH, array_map(fn($team) => $team.PHP_EOL, $teams));
     }
 }
 
