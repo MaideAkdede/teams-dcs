@@ -11,6 +11,7 @@ if(!is_file(FILE_PATH)){
     $errors[] = MISSING_FILE;
 } else {
     $teams = @file(FILE_PATH, FILE_IGNORE_NEW_LINES);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
         if($_POST['action'] === 'add'){
@@ -18,6 +19,11 @@ if(!is_file(FILE_PATH)){
             if($teamName){
                 $teams[] = $teamName;
             }
+        }
+
+        if($_POST['action'] === 'delete'){
+            $teamsNames = $_POST['team-name'] ?? [];
+            $teams = array_diff($teams, $teamsNames);
         }
 
         file_put_contents(FILE_PATH, array_map(fn($team) => $team.PHP_EOL, $teams));
