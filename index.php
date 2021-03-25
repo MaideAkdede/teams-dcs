@@ -7,7 +7,11 @@ define('MISSING_FILE', 'Le fichier texte est absent');
 define('NO_TEAM_YET', 'Pas encore d‘équipe');
 define('FILE_PATH', 'teams.txt');
 
-$teams = file(FILE_PATH);
+if(!is_file(FILE_PATH)){
+    $errors[] = MISSING_FILE;
+} else {
+    $teams = @file(FILE_PATH);
+}
 
 ?>
 <!-- TEMPLATE D'AFFICHAGE -->
