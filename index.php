@@ -10,7 +10,20 @@ define('FILE_PATH', 'teams.txt');
 if(!is_file(FILE_PATH)){
     $errors[] = MISSING_FILE;
 } else {
-    $teams = @file(FILE_PATH);
+    $teams = @file(FILE_PATH, FILE_IGNORE_NEW_LINES);
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+        if($_POST['action'] === 'add'){
+            $teamName = trim($_POST['team-name']);
+            if($teamName){
+                $teams[] = $teamName;
+            }
+        }
+        foreach ($teams as $k => $team){
+            $teams[$k] = $team.PHP_EOL;
+        }
+        file_put_contents(FILE_PATH, $teams);
+    }
 }
 
 ?>
@@ -51,7 +64,7 @@ if(!is_file(FILE_PATH)){
         <?php endif; ?>
         <section class="mt-5">
             <h2>Ajout d’une équipe</h2>
-            <form action="/" method="post">
+            <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
                 <label class="form-label" for="team-name">Nom de l’équipe</label>
                 <input class="form-control"
                        type="text"
@@ -70,7 +83,7 @@ if(!is_file(FILE_PATH)){
         <?php if ($teams): ?>
             <section class="mt-5">
                 <h2>Suppression d’une ou de plusieurs équipes</h2>
-                <form action="/" method="post">
+                <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
                     <ul class="list-group">
                         <?php foreach ($teams as $team): ?>
                             <li class="form-check list-group-item">
