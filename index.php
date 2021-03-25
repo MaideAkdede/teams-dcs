@@ -1,10 +1,14 @@
 <?php
+$errors = [];
+$teams = [];
+
 define('MISSING_TEAM', 'Vous avez oublié de spécifier une ou des équipes');
 define('MISSING_FILE', 'Le fichier texte est absent');
 define('NO_TEAM_YET', 'Pas encore d‘équipe');
+define('FILE_PATH', 'teams.txt');
 
-$errors = [];
-$teams = [];
+$teams = file(FILE_PATH);
+
 ?>
 <!-- TEMPLATE D'AFFICHAGE -->
 <!doctype html>
